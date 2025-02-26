@@ -1,0 +1,16 @@
+.scroll-content {
+    animation: scroll 3s linear infinite; /* 10秒滚动一次 */
+  }
+  
+  @keyframes scroll {
+    0% {
+      transform: translateY(0);
+    }
+    100% {
+      transform: translateY(-50%); /* 向上滚动一半高度 */
+    }
+  }
+
+  .btn {
+    margin-bottom: 0.5rem;
+  }

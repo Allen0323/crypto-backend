@@ -1,11 +1,43 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Card } from 'antd';
+import { Table, Card, Button, message } from 'antd';
 import axios from 'axios';
 
-const StockTable = () => {
+const ContractList = () => {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+
+    const takeProfit = async (id) => {
+        console.log(id);
+        const url = 'http://127.0.0.1:8282/takeProfit?id=' + id;
+
+        try {
+            const response = await axios.post(url, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            console.log("order", response);
+        } catch (error) {
+            console.error('请求出错:', error);
+            message.error('error', error);
+        }
+    }
+
+
+    const handleViewDetail = async (record) => {
+        try {
+            console.log("data", record.key);
+            setLoading(true);
+            await takeProfit(record.key);
+        } catch (err) {
+            console.log("error", err);
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
 
     const fetchData = async () => {
         try {
@@ -87,6 +119,15 @@ const StockTable = () => {
                 return <span style={{ color }}>{change}%</span>;
             },
         },
+        {
+            title: '操作',
+            key: 'action',
+            render: (text, record) => (
+                <Button type="link" onClick={() => handleViewDetail(record)}>
+                    止盈
+                </Button>
+            ),
+        }
     ];
 
     return (
@@ -96,6 +137,7 @@ const StockTable = () => {
                     <Table
                         columns={columns}
                         dataSource={data}
+                        loading={loading}
                         pagination={false} // 禁用分页
                         size="small"
                     />
@@ -105,4 +147,4 @@ const StockTable = () => {
     );
 };
 
-export default StockTable;
+export default ContractList;

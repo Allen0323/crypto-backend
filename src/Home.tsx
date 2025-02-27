@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
 import { Layout, Menu, Button } from 'antd';
 import {
-    UserOutlined,
-    LaptopOutlined,
-    NotificationOutlined,
+    GlobalOutlined,
+    AreaChartOutlined,
+    StockOutlined,
 } from '@ant-design/icons';
 
-import StockTable from './Table.tsx';
+import ContractList from './compents/ContractList.tsx';
 import StrategyList from './compents/StrategyList.tsx';
 import './Home.css';
 import ContractOrderForm from './compents/ContractOrderForm.tsx';
 import StrategyForm from './compents/StrategyForm.tsx';
+import SpotGoodList from './compents/SpotGoodList.tsx';
 const { Header, Content, Sider } = Layout;
 
 const App = () => {
@@ -75,18 +76,18 @@ const App = () => {
                     items={[
                         {
                             key: '1',
-                            icon: <UserOutlined />,
+                            icon: <AreaChartOutlined />,
                             label: 'Contract',
                         },
                         {
                             key: '2',
-                            icon: <LaptopOutlined />,
-                            label: 'SpotGood',
+                            icon: <GlobalOutlined />,
+                            label: 'Strategy',
                         },
                         {
                             key: '3',
-                            icon: <NotificationOutlined />,
-                            label: 'DataAnlyze',
+                            icon: <StockOutlined />,
+                            label: 'SpotGood',
                         },
                     ]}
                 />
@@ -99,7 +100,7 @@ const App = () => {
                     <div style={{ padding: 24, background: '#fff', minHeight: '100vh' }}>
                         <div className="btn"> <Button type='primary' className='btnStyle' onClick={showModal}>下单</Button></div>
                         <ContractOrderForm isModalVisibleValue={isModalVisible} showModalByResult={showModalByResult}></ContractOrderForm>
-                        <StockTable></StockTable>
+                        <ContractList></ContractList>
                     </div>
                 </Content>}
                 {showContentLayer2 && <Content style={{ margin: '24px 16px' }} >
@@ -107,6 +108,12 @@ const App = () => {
                         <div className="btn"> <Button type='primary' className='btnStyle' onClick={showStrategyForm}>新增</Button></div>
                         <StrategyForm isModalVisibleValue={isStrategyForm} showModalByResult={showStrategyFormResult}></StrategyForm>
                         <StrategyList refresh={isStrategyForm}></StrategyList>
+                    </div>
+                </Content>}
+
+                {showContentLayer3 && <Content style={{ margin: '24px 16px' }} >
+                    <div style={{ padding: 24, background: '#fff', minHeight: '100vh' }}>
+                        <SpotGoodList></SpotGoodList>
                     </div>
                 </Content>}
             </Layout>

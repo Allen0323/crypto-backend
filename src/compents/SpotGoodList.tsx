@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Table, Card, Modal, Button } from 'antd';
 import axios from 'axios';
 
-const StrategyList = () => {
+const SpotGoodList = () => {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -14,7 +14,7 @@ const StrategyList = () => {
         try {
             console.log("data", record);
             setLoading(true);
-            const data = await queryBackTest(record.key);
+            const data = await queryBackTest(record.billCode);
             setSelectedRecord(data.data); // 设置选中的行数据
             setIsModalOpen(true); // 打开 Modal
         } catch (err) {
@@ -30,30 +30,27 @@ const StrategyList = () => {
         setIsModalOpen(false);
     };
 
-    const queryBackTest = async (id) => {
-        const response = await axios.get('http://localhost:8282/verifyStrategy/' + id);
+    const queryBackTest = async (billCode) => {
+        const response = await axios.get('http://localhost:8282/getUserOrderDetail?billCode=' + billCode);
         return response.data;
     }
 
     const fetchData = async () => {
         try {
-            const response = await axios.get('http://localhost:8282/getStrategy');
+            const response = await axios.get('http://localhost:8282/getAutoSpotList');
             console.log(response);
             const listData = response.data.data.rows.map((item) => ({
                 key: item.id,
                 userId: item.userId,
                 symbol: item.symbol,
                 strategyCode: item.strategyCode,
-                interVal: item.interVal,
-                dayAutoBuyLimit: item.dayAutoBuyLimit,
-                dayAutoSellLimit: item.dayAutoSellLimit,
-                autoBuyLimit: item.autoBuyLimit,
-                autoSellLimit: item.autoSellLimit,
-                shortEma: item.shortEma,
-                longSma: item.longSma,
-                shortMacd: item.shortMacd,
-                longMacd: item.longMacd,
-                emaMacd: item.emaMacd,
+                quantity: item.quantity,
+                side: item.side,
+                price: item.price,
+                billCode: item.billCode,
+                status: item.status,
+                createTime: item.createTime,
+                updateTime: item.updateTime,
             }));
             console.log(listData);
             setData(listData);
@@ -98,46 +95,41 @@ const StrategyList = () => {
             key: 'strategyCode',
         },
         {
-            title: '间隔',
-            dataIndex: 'interVal',
-            key: 'interVal',
+            title: '账单号',
+            dataIndex: 'billCode',
+            key: 'billCode',
         },
         {
-            title: '日内买入',
-            dataIndex: 'dayAutoBuyLimit',
-            key: 'dayAutoBuyLimit',
+            title: '下单价格',
+            dataIndex: 'price',
+            key: 'price',
         },
         {
-            title: '日内卖出',
-            dataIndex: 'dayAutoSellLimit',
-            key: 'dayAutoSellLimit',
+            title: '下单数量',
+            dataIndex: 'quantity',
+            key: 'quantity',
         },
         {
-            title: '买入',
-            dataIndex: 'autoBuyLimit',
-            key: 'autoBuyLimit',
+            title: '方向',
+            dataIndex: 'side',
+            key: 'side',
         },
         {
-            title: '卖出',
-            dataIndex: 'autoSellLimit',
-            key: 'autoSellLimit',
+            title: '创建时间',
+            dataIndex: 'createTime',
+            key: 'createTime',
         },
         {
-            title: 'shortEma',
-            dataIndex: 'shortEma',
-            key: 'shortEma',
-        },
-        {
-            title: 'longSma',
-            dataIndex: 'longSma',
-            key: 'longSma',
+            title: '更新时间',
+            dataIndex: 'updateTime',
+            key: 'updateTime',
         },
         {
             title: '操作',
             key: 'action',
             render: (text, record) => (
                 <Button type="link" onClick={() => handleViewDetail(record)}>
-                    回测
+                    详情
                 </Button>
             ),
         }
@@ -145,7 +137,7 @@ const StrategyList = () => {
 
     return (
         <div>
-            <Card title="策略管理" style={{ width: '100%' }}>
+            <Card title="现货交易" style={{ width: '100%' }}>
                 <div style={{ height: '200px', overflow: 'hidden', position: 'relative' }}>
                     <div className="scroll-content">
                         <Table
@@ -159,7 +151,7 @@ const StrategyList = () => {
             </Card>
             {/* 详情 Modal */}
             <Modal
-                title="回测结果"
+                title="详情"
                 open={isModalOpen}
                 onCancel={handleCloseModal}
                 footer={[
@@ -171,10 +163,10 @@ const StrategyList = () => {
                 {selectedRecord && (
                     <div>
                         <p>币对: {selectedRecord.symbol}</p>
-                        <p>间隔: {selectedRecord.interVal}</p>
-                        <p>profit: {selectedRecord.profit}</p>
-                        <p>returnNum: {selectedRecord.returnNum}</p>
-                        <p>winNum: {selectedRecord.winNum}</p>
+                        <p>账单号: {selectedRecord.billCode}</p>
+                        <p>交易所账单号: {selectedRecord.serviceBillCode}</p>
+                        <p>状态: {selectedRecord.statusStr}</p>
+                        <p>方向: {selectedRecord.side}</p>
                     </div>
                 )}
             </Modal>
@@ -183,4 +175,4 @@ const StrategyList = () => {
     );
 };
 
-export default StrategyList;
+export default SpotGoodList;

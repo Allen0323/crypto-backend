@@ -3,7 +3,7 @@ import './Login.css'; // 导入样式文件
 import { useHistory } from 'react-router-dom';
 import reactLogo from './assets/react.svg';
 import { Button, Input, Cell, hooks, Toast } from 'react-vant';
-
+import axios from './axios';
 
 const showMessage = Symbol('showMessage')
 
@@ -27,16 +27,29 @@ function Login() {
     setPassword(e.text);
   };
 
-  const handleLogin = () => {
-  
-    if (username === 'admin' && password === '123456') {
-      // 跳转到首页
-      navigate.push('/home');
-      return;
-    }
-    // 处理登录逻辑
-    Toast.fail('失败文案');
 
+
+  const handleLogin = async () => {
+
+    const url = '/auth/login';
+    const data = {
+      "username": username,
+      "password": password,
+    }
+    try {
+      const response = await axios.post(url, data, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      console.log("strategy", response);
+      // 保存 token 到本地存储
+      localStorage.setItem('token', response.data.token);
+      navigate.push("/home")
+    } catch (error) {
+      Toast.fail(error.response.data);
+      console.error('请求出错:', error);
+    }
   };
   return (
     <div className='main'>

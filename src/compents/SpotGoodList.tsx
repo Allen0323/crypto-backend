@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Table, Card, Modal, Button } from 'antd';
-import axios from 'axios';
+import axios from '../axios';
 
 const SpotGoodList = () => {
     const [data, setData] = useState([]);
@@ -31,13 +31,13 @@ const SpotGoodList = () => {
     };
 
     const queryBackTest = async (billCode) => {
-        const response = await axios.get('http://localhost:8282/getUserOrderDetail?billCode=' + billCode);
+        const response = await axios.get('/getUserOrderDetail?billCode=' + billCode);
         return response.data;
     }
 
     const fetchData = async () => {
         try {
-            const response = await axios.get('http://localhost:8282/getAutoSpotList');
+            const response = await axios.get('/getAutoSpotList');
             console.log(response);
             const listData = response.data.data.rows.map((item) => ({
                 key: item.id,

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Table, Card, Modal, Button } from 'antd';
-import axios from 'axios';
+import axios from '../axios';
 
 const StrategyList = () => {
     const [data, setData] = useState([]);
@@ -31,13 +31,13 @@ const StrategyList = () => {
     };
 
     const queryBackTest = async (id) => {
-        const response = await axios.get('http://localhost:8282/verifyStrategy/' + id);
+        const response = await axios.get('/verifyStrategy/' + id);
         return response.data;
     }
 
     const fetchData = async () => {
         try {
-            const response = await axios.get('http://localhost:8282/getStrategy');
+            const response = await axios.get('/getStrategy');
             console.log(response);
             const listData = response.data.data.rows.map((item) => ({
                 key: item.id,

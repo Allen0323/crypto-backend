@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Table, Card, Button, message } from 'antd';
-import axios from 'axios';
+import axios from '../axios.js';
 
 const ContractList = () => {
     const [data, setData] = useState([]);
@@ -9,7 +9,7 @@ const ContractList = () => {
 
     const takeProfit = async (id) => {
         console.log(id);
-        const url = 'http://127.0.0.1:8282/takeProfit?id=' + id;
+        const url = '/takeProfit?id=' + id;
 
         try {
             const response = await axios.post(url, {
@@ -41,7 +41,7 @@ const ContractList = () => {
 
     const fetchData = async () => {
         try {
-            const response = await axios.get('http://localhost:8282/queryContractOrder');
+            const response = await axios.get('/queryContractOrder');
             const listData = response.data.data.rows.map((stock) => ({
                 key: stock.id,
                 name: stock.symbol,

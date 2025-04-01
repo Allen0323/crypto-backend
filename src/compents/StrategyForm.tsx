@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Modal, Form, Input, Select, Radio, InputNumber, Button, message } from 'antd';
-import axios from 'axios';
+import axios from '../axios';
 const { Option } = Select;
 
 const StrategyForm = ({ isModalVisibleValue, showModalByResult }) => {
@@ -55,7 +55,7 @@ const StrategyForm = ({ isModalVisibleValue, showModalByResult }) => {
     };
 
     const doOrder = async (value) => {
-        const url = 'http://127.0.0.1:8282/configStrategy';
+        const url = '/configStrategy';
         const data = {
             "symbol": value.symbol,
             "strategyCode": value.strategyCode,
